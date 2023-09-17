@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slider_Modal</title>
+    <style>
+        .reviews{
+            width: 40%;
+            margin: auto;
+            background-color: rgb(80, 5, 5);
+            color: #fff;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-weight: 400;
+            font-size: 150%;
+            text-align: center;
+            padding: 5%;
+
+        }
+        .reviews img{
+            border-radius: 50%;
+            width: 150px;
+        }
+        .person{
+            display: flex;
+            justify-content: space-between;
+            margin: auto;
+            width: 40% ;
+        } 
+        .person p{
+            padding-top: 20%;
+            font-size: 1.5rem;
+        }
+        .reviews .btns{
+            width: 43%;
+            position: absolute;
+            display: inline-flex;
+            justify-content: space-between;
+            top: 40%;
+            left: 28%;
+            cursor: pointer;
+        }
+        .add{
+            width: 15%;
+            padding: 10px 20px;
+            border-radius: 5px ;
+            font-size: large;
+          
+            margin-top: 30px;
+            margin-left: 43%;
+        }
+         .add:hover{
+            cursor: pointer;
+            background-color: rgba(78, 15, 15, 0.664);
+        }
+        /* __________________________________________________________ */
+        .form{
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left:0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+        }
+        .overlay{
+            padding: 20px;
+            width: 50%;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            background-color: rgba(109, 26, 26, 0.952);
+        }
+        .overlay input:not(input[type=submit]) , textarea{
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+            border: none;
+            border-bottom: solid 3px #000;
+            background-color: transparent;
+            padding: 10px 2px;
+        }
+        .overlay input::placeholder,textarea::placeholder{
+            color: rgb(133, 125, 125);
+            font-size: 18px;
+        }
+        .overlay .modalForm #submit{
+            padding: 10px 30px;
+            font-size: 18px;
+        }
+        .overlay .modalForm #submit:hover{
+            cursor: pointer;
+            background-color: rgba(78, 15, 15, 0.664);
+        }
+        .overlay .closeBtn{
+            position: absolute;
+            top: -7%;
+            left: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <section class="reviews">
+        <p class="review"></p>
+        <div class="person">
+            <img src="" alt="">
+            <p></p>
+        </div>
+        <div class="btns">
+            <button class="prev"> &#60; </button>
+            <button class="next"> &#62; </button>
+        </div>
+    </section>
+    <button class="add"> Add review</button>
+    <section class="form">
+        <div class="overlay">
+            <form action="" class="modalForm">
+                <div>
+                    <input type="text" name="username" id="userName" placeholder="Enter your Name">
+                </div>
+                <div>
+                    <input type="text" name="image" id="img" placeholder="Enter your image">
+                </div>
+                <div>
+                    <textarea name="review" id="review" placeholder="Enter review"></textarea>
+                </div>
+                <input type="submit" value="Add" id="submit">
+            </form>
+            <button class="closeBtn">X</button>
+        </div>
+    </section>
+    <script>
+        const reviewsData=[
+            {
+                id:1,
+                name:"Aml gamal",
+                review:"Thankyou for a good services",
+                imgURL:"images/p1.jpeg"
+            } ,
+            {
+                id:2,
+                name:"Yousef Mohamed",
+                review:"This is specialy offers,I love it",
+                imgURL:"images/p2.jpeg"
+            } ,
+            {
+                id:3,
+                name:"Mosap amer",
+                review:"It's fantastic I love this soooo much",
+                imgURL:"images/p3.jpeg"
+            }
+        ]
+        let reviewElement = document.querySelector(".review");
+        let nameElement = document.querySelector(".person p");
+        let imgElement = document.querySelector(".person img");
+        let CurrentElement = 0;
+        let prevBtn = document.querySelector(".prev");
+        let nextBtn = document.querySelector(".next");
+        
+        let updateUI = ()=>{
+            const item = reviewsData[CurrentElement];
+            nameElement.textContent=item.name;
+            imgElement.src=item.imgURL;
+            reviewElement.textContent=item.review;
+        }
+        updateUI();
+        nextBtn.addEventListener('click',()=>{
+            CurrentElement++;
+            if (CurrentElement>reviewsData.length-1) {
+                CurrentElement=0;
+            }
+            updateUI();
+        });
+        
+        prevBtn.addEventListener('click',()=>{
+            CurrentElement--;
+            if (CurrentElement<0) {
+                CurrentElement=reviewsData.length-1;
+            }
+            updateUI();
+        });
+        // _____________************The End of slider*************_______________//
+        let AddData = document.querySelector(".add");
+        let overlay = document.querySelector(".form");
+        let modalForm = document.querySelector(".modalForm");
+        let closeBtn = document.querySelector(".closeBtn");
+        AddData.addEventListener('click',()=>{
+            overlay.style.display = "block";
+        });
+        let reviewForm = document.querySelector(".overlay form")
+        reviewForm.addEventListener('submit',e=>e.preventDefault());
+
+        let inputName = document.getElementById("userName")
+        let inputReview = document.getElementById("review");
+        let inputImage = document.getElementById("img");
+        let submitBtn = document.getElementById("submit");
+
+        submitBtn.addEventListener('click',()=>{
+            reviewsData.push({
+                id : reviewsData.length+1,
+                name : inputName.value,
+                review : inputReview.value,
+                imgURL : "images/"+inputImage.value
+            })
+        })
+
+        submitBtn.addEventListener('click',()=>{
+            overlay.style.display="none";
+        })
+        closeBtn.addEventListener('click', ()=>{
+            overlay.style.display="none";
+        });
+    </script>
+</body>
+</html>
